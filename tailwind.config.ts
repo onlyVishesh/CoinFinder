@@ -1,3 +1,5 @@
+import type { Config } from "tailwindcss";
+
 const config = {
   darkMode: ["class"],
   content: [
@@ -65,22 +67,21 @@ const config = {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
-        "dropdown": {
+        dropdown: {
           from: { height: "0" },
           to: { height: "max" },
         },
         pulse: {
           "0%": {
-            opacity: 1,
+            opacity: "1",
           },
           "50%": {
-            opacity: 0.5,
+            opacity: "0.5",
           },
           "100%": {
-            opacity: 1,
+            opacity: "1",
           },
         },
-        
       },
     },
   },
