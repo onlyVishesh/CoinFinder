@@ -54,7 +54,6 @@ export default function Home() {
   };
 
   const getCoinsData = async () => {
-    // const data = coins.slice(perPage * page - perPage, perPage * page);
     const response = await axios.get(
       coinsDataApi(currency, perPage, page, filter),
     );

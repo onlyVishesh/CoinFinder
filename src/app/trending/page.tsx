@@ -1,10 +1,42 @@
-import Options from "@/components/options";
+"use client";
+
+import Card from "@/components/Card";
+import { trendingApi } from "@/config/api";
+import axios from "axios";
+import { useEffect, useState } from "react";
+
+type TrendingCoins = Array<{
+  item: {
+    id:string
+    score: number;
+    name: string;
+    symbol: string;
+    large: string;
+    market_cap_rank: number;
+    data: {
+      price: number;
+    };
+  };
+}>;
 
 export default function Page() {
- 
+  const [trendingCoins, setTrendingCoins] = useState<TrendingCoins>([]);
+
+  const getTrendingCoins = async () => {
+    const response = await axios.get(trendingApi);
+    setTrendingCoins(response.data.coins);
+    console.log(response.data.coins);
+  };
+
+  useEffect(() => {
+    getTrendingCoins();
+  }, []);
+
   return (
-    <div className="flex min-h-screen w-full flex-col items-center justify-center">
-      <Options />
+    <div className="mx-auto my-6 flex w-[95%] flex-wrap justify-center gap-5 rounded-md sm:gap-10 md:w-[80%]">
+      {trendingCoins.map((coin) => (
+        <Card key={coin.item.id} item={coin.item} />
+      ))}
     </div>
   );
 }

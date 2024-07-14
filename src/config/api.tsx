@@ -27,3 +27,5 @@ export const coinsDataApi = (
 
 export const searchApi = (query: string) =>
   `https://api.coingecko.com/api/v3/search?query=${query}`;
+
+export const trendingApi = "https://api.coingecko.com/api/v3/search/trending";
