@@ -1,13 +1,14 @@
 "use client";
 
 import Card from "@/components/Card";
+import CardShimmer from "@/components/CardShimmer";
 import { trendingApi } from "@/config/api";
 import axios from "axios";
 import { useEffect, useState } from "react";
 
 type TrendingCoins = Array<{
   item: {
-    id:string
+    id: string;
     score: number;
     name: string;
     symbol: string;
@@ -34,9 +35,11 @@ export default function Page() {
 
   return (
     <div className="mx-auto my-6 flex w-[95%] flex-wrap justify-center gap-5 rounded-md sm:gap-10 md:w-[80%]">
-      {trendingCoins.map((coin) => (
-        <Card key={coin.item.id} item={coin.item} />
-      ))}
+      {trendingCoins.length === 0
+        ? new Array(15).fill(null).map((_, index) => <CardShimmer key={index} />)
+        : trendingCoins.map((coin) => (
+            <Card key={coin.item.id} item={coin.item} />
+          ))}
     </div>
   );
 }
