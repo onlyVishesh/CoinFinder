@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import Link from "next/link";
 import "./globals.css";
+import { Toaster } from "@/components/ui/toaster";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -19,13 +20,14 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body className={inter.className}>
-        <Link href="/" className="text-5xl font-semibold">
+        <main><Link href="/" className="text-5xl font-semibold">
           <img src="/logo.svg" alt="logo" className="m-4 size-24" />
         </Link>
         <div className="flex w-full flex-col items-center">
           <Options />
           {children}
-        </div>
+        </div></main>
+        <Toaster />
       </body>
     </html>
   );

@@ -1,6 +1,8 @@
+import { useRouter } from "next/navigation";
 import React from "react";
 
 type CoinProps = {
+  id: string;
   score: number;
   name: string;
   symbol: string;
@@ -12,9 +14,13 @@ type CoinProps = {
 };
 
 const Card: React.FC<{ item: CoinProps }> = ({ item }) => {
+  const router = useRouter();
   return (
-    <div className="flex gap-5 rounded-md border-2 border-zinc-800 px-4 py-2 w-[300px] sm:w-[400px] justify-between items-center hover:bg-zinc-900/95 hover:cursor-pointer">
-      <div className="text-sm sm:text-lg font-semibold text-zinc-500">
+    <div
+      className="flex w-[300px] items-center justify-between gap-5 rounded-md border-2 border-zinc-800 px-4 py-2 hover:cursor-pointer hover:bg-zinc-900/95 sm:w-[400px]"
+      onClick={() => router.push(`/coin/${item.id}`)}
+    >
+      <div className="text-sm font-semibold text-zinc-500 sm:text-lg">
         <p>
           Trending No:{" "}
           <span className="font-normal text-zinc-300">{item.score + 1}</span>
@@ -39,7 +45,11 @@ const Card: React.FC<{ item: CoinProps }> = ({ item }) => {
           </span>
         </p>
       </div>
-      <img src={item.large} className="size-28 sm:size-32 rounded-full p-1 border-2 border-zinc-400" alt={item.name} />
+      <img
+        src={item.large}
+        className="size-28 rounded-full border-2 border-zinc-400 p-1 sm:size-32"
+        alt={item.name}
+      />
     </div>
   );
 };

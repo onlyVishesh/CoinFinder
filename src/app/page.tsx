@@ -1,7 +1,7 @@
 "use client";
 
-import axios from "axios";
-import { useEffect, useState } from "react";
+import axios, { AxiosError } from "axios";
+import { useEffect, useRef, useState } from "react";
 
 import { Input } from "@/components/ui/input";
 import {
@@ -12,6 +12,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { useToast } from "@/components/ui/use-toast";
 import { coinListApi, coinsDataApi, searchApi } from "@/config/api";
 import { cn } from "@/lib/utils";
 import {
@@ -21,6 +22,8 @@ import {
   Search,
   StepBack,
 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { supportedCurrencies } from "@/config/constant";
 
 type Coin = {
   id: string;
@@ -36,6 +39,11 @@ type Coin = {
 };
 
 export default function Home() {
+  const router = useRouter();
+  const inputRef = useRef<HTMLInputElement>(null);
+  const searchResultsRef = useRef<HTMLDivElement>(null);
+  const { toast } = useToast();
+
   const [coins, setCoins] = useState<Coin[]>([]);
   const [coinData, setCoinData] = useState<Coin[]>([]);
   const [currency, setCurrency] = useState("inr");
@@ -49,15 +57,73 @@ export default function Home() {
   const [searchResult, setSearchResult] = useState<Coin[]>([]);
 
   const getCoins = async () => {
-    const response = await axios.get(coinListApi);
-    setCoins(response.data);
+    try {
+      const response = await axios.get(coinListApi);
+      setCoins(response.data);
+    } catch (error) {
+      let errorMessage = "An unknown error occurred";
+
+      if (axios.isAxiosError(error)) {
+        const axiosError = error as AxiosError;
+        const errorCode = axiosError.response
+          ? axiosError.response.status
+          : "Unknown status";
+        const errorData = axiosError.response?.data as any;
+        const errorStatusText = errorData?.status?.error_message
+          ? errorData.status.error_message.split(".")[0]
+          : "Unknown status";
+        const errorType = axiosError.name || "Unknown error type";
+        errorMessage = `
+        ${errorCode} ${errorStatusText} (${errorType})
+        Try Again Later`;
+      } else if (error instanceof Error) {
+        errorMessage = `
+        ${error.name}: ${error.message}
+        Try Again Later`;
+      }
+
+      toast({
+        variant: "destructive",
+        title: "Error Occurred",
+        description: errorMessage,
+      });
+    }
   };
 
   const getCoinsData = async () => {
-    const response = await axios.get(
-      coinsDataApi(currency, perPage, page, filter),
-    );
-    setCoinData(response.data);
+    try {
+      const response = await axios.get(
+        coinsDataApi(currency, perPage, page, filter),
+      );
+      setCoinData(response.data);
+    } catch (error) {
+      let errorMessage = "An unknown error occurred";
+
+      if (axios.isAxiosError(error)) {
+        const axiosError = error as AxiosError;
+        const errorCode = axiosError.response
+          ? axiosError.response.status
+          : "Unknown status";
+        const errorData = axiosError.response?.data as any;
+        const errorStatusText = errorData?.status?.error_message
+          ? errorData.status.error_message.split(".")[0]
+          : "Unknown status";
+        const errorType = axiosError.name || "Unknown error type";
+        errorMessage = `
+        ${errorCode} ${errorStatusText} (${errorType})
+        Try Again Later`;
+      } else if (error instanceof Error) {
+        errorMessage = `
+        ${error.name}: ${error.message}
+        Try Again Later`;
+      }
+
+      toast({
+        variant: "destructive",
+        title: "Error Occurred",
+        description: errorMessage,
+      });
+    }
   };
 
   const getSearchData = async (query: string) => {
@@ -66,14 +132,86 @@ export default function Home() {
       const data = response.data.coins;
       setSearchResult(Array.isArray(data) ? data : []);
     } catch (error) {
-      console.error("Error fetching search data:", error);
-      setSearchResult([]);
+      let errorMessage = "An unknown error occurred";
+
+      if (axios.isAxiosError(error)) {
+        const axiosError = error as AxiosError;
+        const errorCode = axiosError.response
+          ? axiosError.response.status
+          : "Unknown status";
+        const errorData = axiosError.response?.data as any;
+        const errorStatusText = errorData?.status?.error_message
+          ? errorData.status.error_message.split(".")[0]
+          : "Unknown status";
+        const errorType = axiosError.name || "Unknown error type";
+        errorMessage = `
+        ${errorCode} ${errorStatusText} (${errorType})
+        Try Again Later`;
+      } else if (error instanceof Error) {
+        errorMessage = `
+        ${error.name}: ${error.message}
+        Try Again Later`;
+      }
+
+      toast({
+        variant: "destructive",
+        title: "Error Occurred",
+        description: errorMessage,
+      });
+    }
+  };
+
+  const isValidCurrency = (currency: string) => {
+    return supportedCurrencies.includes(currency.toLowerCase());
+  };
+
+  const handleCurrencyInput = () => {
+    if (!isValidCurrency(inputCurrency)) {
+      toast({
+        variant: "destructive",
+        title: "Invalid Currency",
+        description: `"${inputCurrency}" is not a supported currency.`,
+      });
+      return;
+    }
+    setCurrency(inputCurrency);
+  };
+
+  const handleCoinClick = (coinId: string) => {
+    router.push(`/coin/${coinId}`);
+  };
+
+  const handleResultClick = (result: Coin) => {
+    router.push(`/coin/${result.id}`);
+    setShowSearch(false);
+  };
+
+  const handleClickOutside = (event: MouseEvent) => {
+    if (
+      inputRef.current &&
+      !inputRef.current.contains(event.target as Node) &&
+      searchResultsRef.current &&
+      !searchResultsRef.current.contains(event.target as Node)
+    ) {
+      setShowSearch(false);
     }
   };
 
   useEffect(() => {
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  useEffect(() => {
     const timer = setTimeout(() => {
-      getSearchData(searchValue);
+      if (searchValue.trim() !== "") {
+        getSearchData(searchValue);
+        setShowSearch(true);
+      } else {
+        setShowSearch(false);
+      }
     }, 200);
 
     return () => clearTimeout(timer);
@@ -92,15 +230,10 @@ export default function Home() {
       <div className="mx-auto my-4 flex w-[95%] flex-col items-center rounded-md md:w-[80%]">
         <div className="relative flex">
           <Input
+            ref={inputRef}
             className="w-96"
             placeholder="Search Any Coin"
             value={searchValue}
-            onFocus={() => {
-              setShowSearch(true);
-            }}
-            onBlur={() => {
-              setShowSearch(false);
-            }}
             onChange={(e) => {
               setSearchValue(e.target.value);
             }}
@@ -116,11 +249,12 @@ export default function Home() {
           />
 
           <div
+            ref={searchResultsRef}
             className={cn(
               "absolute top-full z-10 mt-2 w-96 flex-col gap-1 rounded-b-md bg-zinc-900/95",
               {
-                hidden: !showSearch || searchValue.length === 0,
-                flex: showSearch && searchValue.length !== 0,
+                hidden: !showSearch || searchValue.trim() === "",
+                flex: showSearch && searchValue.trim() !== "",
               },
             )}
           >
@@ -135,6 +269,7 @@ export default function Home() {
                 <div
                   key={result.id}
                   className="flex justify-between px-4 py-2 text-sm hover:cursor-pointer hover:bg-zinc-800"
+                  onClick={() => handleResultClick(result)}
                 >
                   <div className="flex items-center gap-2">
                     <img
@@ -155,6 +290,7 @@ export default function Home() {
                 <div
                   key={result.id}
                   className="flex justify-between px-4 py-2 text-sm hover:cursor-pointer hover:bg-zinc-800"
+                  onClick={() => handleResultClick(result)}
                 >
                   <div className="flex items-center gap-2">
                     <img
@@ -163,15 +299,11 @@ export default function Home() {
                       className="size-7"
                     />
                     <div className="flex flex-col">
-                      <div>{result?.name}</div>
+                      <div>{result.name}</div>
                       <div className="text-xs">{result?.symbol}</div>
                     </div>
                   </div>
-                  <div>
-                    {result.market_cap_rank === null
-                      ? "NA"
-                      : result.market_cap_rank}
-                  </div>
+                  <div>{result?.market_cap_rank}</div>
                 </div>
               ))
             )}
@@ -258,7 +390,11 @@ export default function Home() {
                   </TableRow>
                 ))
               : coinData.map((coin, index) => (
-                  <TableRow key={coin?.id} className="hover:cursor-pointer">
+                  <TableRow
+                    key={coin.id}
+                    className="hover:cursor-pointer"
+                    onClick={() => handleCoinClick(coin.id)}
+                  >
                     <TableCell className="flex items-center gap-5 font-medium">
                       <img
                         src={coin?.image}
@@ -366,9 +502,7 @@ export default function Home() {
             }}
             onKeyDown={(e) => {
               if (e.key === "Enter") {
-                {
-                  setCurrency(inputCurrency);
-                }
+                handleCurrencyInput();
               }
             }}
           />
