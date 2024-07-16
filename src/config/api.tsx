@@ -1,7 +1,7 @@
 export const coinListApi = "https://api.coingecko.com/api/v3/coins/list";
 
 export const coinDataApi = (coinId: string) =>
-  `https://api.coingecko.com/api/v3/coins/${coinId}&per_page=10`;
+  `https://api.coingecko.com/api/v3/coins/${coinId}?community_data=false&developer_data=false&sparkline=false`;
 
 export const coinsDataApi = (
   currency: string,

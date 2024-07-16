@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/table";
 import { useToast } from "@/components/ui/use-toast";
 import { coinListApi, coinsDataApi, searchApi } from "@/config/api";
+import { supportedCurrencies } from "@/config/constant";
 import { cn } from "@/lib/utils";
 import {
   ArrowDownUp,
@@ -23,7 +24,6 @@ import {
   StepBack,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { supportedCurrencies } from "@/config/constant";
 
 type Coin = {
   id: string;
@@ -46,7 +46,7 @@ export default function Home() {
 
   const [coins, setCoins] = useState<Coin[]>([]);
   const [coinData, setCoinData] = useState<Coin[]>([]);
-  const [currency, setCurrency] = useState("inr");
+  const [currency, setCurrency] = useState("usd");
   const [inputCurrency, setInputCurrency] = useState("");
   const [perPage, setPerPage] = useState(10);
   const [inputPerPage, setInputPerPage] = useState<number | string>();
@@ -471,7 +471,7 @@ export default function Home() {
           <div>Per Page</div>
           <Input
             className="w-14 placeholder:text-zinc-500"
-            placeholder="10"
+            placeholder={perPage.toString()}
             value={inputPerPage}
             onChange={(e) => {
               setInputPerPage(e.target.value);
@@ -486,6 +486,7 @@ export default function Home() {
                     Number(inputPerPage) === 0 ? 10 : Number(inputPerPage),
                   );
                 }
+                setInputPerPage("");
               }
             }}
             type="number"
@@ -495,7 +496,7 @@ export default function Home() {
           <div>Currency</div>
           <Input
             className="w-14 placeholder:text-zinc-500"
-            placeholder="USD"
+            placeholder={currency.toUpperCase()}
             value={inputCurrency}
             onChange={(e) => {
               setInputCurrency(e.target.value);
@@ -503,6 +504,7 @@ export default function Home() {
             onKeyDown={(e) => {
               if (e.key === "Enter") {
                 handleCurrencyInput();
+                setInputCurrency("");
               }
             }}
           />
