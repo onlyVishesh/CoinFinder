@@ -22,6 +22,7 @@ type Coin = {
   thumb: string;
   market_data: {
     market_cap: { [currency: string]: number };
+    current_price: { [currency: string]: string };
     fully_diluted_valuation: { [currency: string]: number };
     market_cap_change_percentage_24h_in_currency: {
       [currency: string]: number;
@@ -35,6 +36,8 @@ type Coin = {
     atl: { [currency: string]: number };
     atl_change_percentage: { [currency: string]: number };
     atl_date: { [currency: string]: string };
+    high_24h: { [currency: string]: number };
+    low_24h: { [currency: string]: number };
   };
   categories: string[];
 };
@@ -108,8 +111,11 @@ const Page = ({ params }: { params: { id: string } }) => {
             data={{
               marketData: {
                 market_cap_rank: coinData.market_cap_rank,
+                current_price: coinData.market_data.current_price,
                 market_cap: coinData.market_data.market_cap,
-                market_cap_change_percentage_24h_in_currency: coinData.market_data.market_cap_change_percentage_24h_in_currency,
+                market_cap_change_percentage_24h_in_currency:
+                  coinData.market_data
+                    .market_cap_change_percentage_24h_in_currency,
                 total_supply: coinData.market_data.total_supply,
                 max_supply: coinData.market_data.max_supply,
                 circulating_supply: coinData.market_data.circulating_supply,
@@ -123,6 +129,8 @@ const Page = ({ params }: { params: { id: string } }) => {
                 atl_date: coinData.market_data.atl_date,
                 fully_diluted_valuation:
                   coinData.market_data.fully_diluted_valuation,
+                high_24h: coinData.market_data.high_24h,
+                low_24h: coinData.market_data.low_24h,
               },
               categories: coinData.categories,
               symbol: coinData.symbol,

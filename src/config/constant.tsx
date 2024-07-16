@@ -105,8 +105,8 @@ export const formatCurrency = (value: number, currency: string): string => {
     formattedValue = value / 1_000_000;
     suffix = suffixes[2]; 
   } else if (absoluteValue >= 1_000) {
-    formattedValue = value / 1_000;
-    suffix = suffixes[1]; 
+    formattedValue = value ;
+    suffix = suffixes[0]; 
   } else {
     formattedValue = value;
   }

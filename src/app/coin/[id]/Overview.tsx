@@ -33,6 +33,7 @@ import { useState } from "react";
 
 type MarketData = {
   market_cap_rank: number | null;
+  current_price: { [currency: string]: number };
   market_cap: { [currency: string]: number };
   market_cap_change_percentage_24h_in_currency: {
     [currency: string]: number;
@@ -47,6 +48,8 @@ type MarketData = {
   atl: { [currency: string]: number };
   atl_change_percentage: { [currency: string]: number };
   atl_date: { [currency: string]: string };
+  high_24h: { [currency: string]: number };
+  low_24h: { [currency: string]: number };
 };
 
 type OverviewProps = {
@@ -297,45 +300,34 @@ const Overview = ({ data }: OverviewProps) => {
           <div className="flex items-center justify-center gap-3 text-sm text-zinc-400">
             <div
               className={cn(
-                "flex size-9 select-none items-center justify-center rounded-full font-semibold shadow-sm duration-200",
-                {
-                  "bg-zinc-600 text-primary": priceRange === 1,
-                  "hover:cursor-pointer hover:bg-zinc-700": priceRange !== 1,
-                },
+                "flex size-9 select-none items-center justify-center rounded-full bg-zinc-600 font-semibold text-primary shadow-sm duration-200",
               )}
-              onClick={() => {
-                setPriceRange(1);
-              }}
             >
               1 D
-            </div>
-            <div
-              className={cn(
-                "flex size-9 select-none items-center justify-center rounded-full font-semibold shadow-sm duration-200",
-                {
-                  "bg-zinc-600 text-primary": priceRange === 365,
-                  "hover:cursor-pointer hover:bg-zinc-700": priceRange !== 365,
-                },
-              )}
-              onClick={() => {
-                setPriceRange(365);
-              }}
-            >
-              1 Y
             </div>
           </div>
         </div>
 
         <div className="mx-auto flex w-full flex-col gap-2 lg:w-[70%]">
-          <Slider defaultValue={[50]} max={100} step={1} />
+          <Slider defaultValue={[100-Math.round(
+                  ((marketData.high_24h[currency] -
+                    marketData.current_price[currency]) /
+                    (marketData.high_24h[currency] -
+                    marketData.low_24h[currency])) *
+                    10000,
+                ) / 100]} max={100} step={1} />
           <div className="flex justify-between">
             <div>
-              <div>1 {priceRange === 1 ? "Day" : "Year"} Low</div>
-              <div>34234</div>
+              <div>Low</div>
+              <div>
+                {formatCurrency(marketData.low_24h[currency], currency)}
+              </div>
             </div>
             <div className="text-right">
-              <div>1 {priceRange === 1 ? "Day" : "Year"} High</div>
-              <div>342634</div>
+              <div>High</div>
+              <div>
+                {formatCurrency(marketData.low_24h[currency], currency)}
+              </div>
             </div>
           </div>
         </div>
@@ -345,8 +337,17 @@ const Overview = ({ data }: OverviewProps) => {
             <Lightbulb className="size-6" />{" "}
             <span>
               Currently price is{" "}
-              <span className="font-semibold text-zinc-50">xx% lower</span> than
-              its 1 {priceRange === 1 ? "day" : "year"} high price
+              <span className="font-semibold text-zinc-50">
+                {Math.round(
+                  ((marketData.high_24h[currency] -
+                    marketData.current_price[currency]) /
+                    (marketData.high_24h[currency] -
+                    marketData.low_24h[currency])) *
+                    10000,
+                ) / 100}
+                %
+              </span>{" "}
+              lower than its 24 hours high price
             </span>
           </div>
         </div>
