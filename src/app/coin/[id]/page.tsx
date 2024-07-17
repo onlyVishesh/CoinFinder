@@ -1,12 +1,13 @@
 "use client";
 
-import ChartCard from "@/components/ui/ChartCard";
+import ChartCard from "@/app/coin/[id]/ChartCard";
 import { useToast } from "@/components/ui/use-toast";
 import { coinDataApi } from "@/config/api";
 import axios, { AxiosError } from "axios";
 import { ArrowLeft, Star } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import AboutCoin from "./AboutCoin";
 import Overview from "./Overview";
 
 type Coin = {
@@ -14,6 +15,8 @@ type Coin = {
   name: string;
   symbol: string;
   image: string;
+  description: { [key: string]: string };
+  links: { [key: string]: [string] | string };
   market_cap_rank: number | null;
   current_price: number;
   price_change_percentage_1h_in_currency: number;
@@ -38,6 +41,12 @@ type Coin = {
     atl_date: { [currency: string]: string };
     high_24h: { [currency: string]: number };
     low_24h: { [currency: string]: number };
+    price_change_24h_in_currency: { [currency: string]: number };
+    price_change_percentage_1h_in_currency: { [currency: string]: number };
+    price_change_percentage_24h_in_currency: { [currency: string]: number };
+    price_change_percentage_7d_in_currency: { [currency: string]: number };
+    price_change_percentage_30d_in_currency: { [currency: string]: number };
+    price_change_percentage_1y_in_currency: { [currency: string]: number };
   };
   categories: string[];
 };
@@ -102,41 +111,62 @@ const Page = ({ params }: { params: { id: string } }) => {
         <Star strokeWidth={2} className="size-6 sm:size-8" />
       </div>
 
-      <div className="my-16 flex h-full flex-col gap-7 md:flex-row">
-        <div className="flex-1">
-          <ChartCard />
-        </div>
-        <div className="flex-1">
-          <Overview
-            data={{
-              marketData: {
-                market_cap_rank: coinData.market_cap_rank,
-                current_price: coinData.market_data.current_price,
-                market_cap: coinData.market_data.market_cap,
-                market_cap_change_percentage_24h_in_currency:
-                  coinData.market_data
-                    .market_cap_change_percentage_24h_in_currency,
-                total_supply: coinData.market_data.total_supply,
-                max_supply: coinData.market_data.max_supply,
-                circulating_supply: coinData.market_data.circulating_supply,
-                ath: coinData.market_data.ath,
-                ath_change_percentage:
-                  coinData.market_data.ath_change_percentage,
-                ath_date: coinData.market_data.ath_date,
-                atl: coinData.market_data.atl,
-                atl_change_percentage:
-                  coinData.market_data.atl_change_percentage,
-                atl_date: coinData.market_data.atl_date,
-                fully_diluted_valuation:
-                  coinData.market_data.fully_diluted_valuation,
-                high_24h: coinData.market_data.high_24h,
-                low_24h: coinData.market_data.low_24h,
-              },
-              categories: coinData.categories,
-              symbol: coinData.symbol,
-            }}
-          />
-        </div>
+      <div className="mb-4 mt-4 flex flex-col items-stretch gap-7 md:mt-8 lg:mt-16 lg:flex-row">
+        <ChartCard
+          data={{
+            id: coinData.id,
+            marketData: {
+              current_price: coinData.market_data.current_price,
+              price_change_24h_in_currency:
+                coinData.market_data.price_change_24h_in_currency,
+              price_change_percentage_1h_in_currency:
+                coinData.market_data.price_change_percentage_1h_in_currency,
+              price_change_percentage_24h_in_currency:
+                coinData.market_data.price_change_percentage_24h_in_currency,
+              price_change_percentage_7d_in_currency:
+                coinData.market_data.price_change_percentage_7d_in_currency,
+              price_change_percentage_30d_in_currency:
+                coinData.market_data.price_change_percentage_30d_in_currency,
+              price_change_percentage_1y_in_currency:
+                coinData.market_data.price_change_percentage_1y_in_currency,
+            },
+          }}
+        />
+        <Overview
+          data={{
+            marketData: {
+              market_cap_rank: coinData.market_cap_rank,
+              current_price: coinData.market_data.current_price,
+              market_cap: coinData.market_data.market_cap,
+              market_cap_change_percentage_24h_in_currency:
+                coinData.market_data
+                  .market_cap_change_percentage_24h_in_currency,
+              total_supply: coinData.market_data.total_supply,
+              max_supply: coinData.market_data.max_supply,
+              circulating_supply: coinData.market_data.circulating_supply,
+              ath: coinData.market_data.ath,
+              ath_change_percentage: coinData.market_data.ath_change_percentage,
+              ath_date: coinData.market_data.ath_date,
+              atl: coinData.market_data.atl,
+              atl_change_percentage: coinData.market_data.atl_change_percentage,
+              atl_date: coinData.market_data.atl_date,
+              fully_diluted_valuation:
+                coinData.market_data.fully_diluted_valuation,
+              high_24h: coinData.market_data.high_24h,
+              low_24h: coinData.market_data.low_24h,
+            },
+            categories: coinData.categories,
+            symbol: coinData.symbol,
+          }}
+        />
+      </div>
+      <div className="flex-1">
+        <AboutCoin
+          data={{
+            description: coinData.description,
+            links: coinData.links,
+          }}
+        />
       </div>
     </div>
   );

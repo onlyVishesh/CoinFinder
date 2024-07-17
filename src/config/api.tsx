@@ -15,3 +15,6 @@ export const searchApi = (query: string) =>
   `https://api.coingecko.com/api/v3/search?query=${query}`;
 
 export const trendingApi = "https://api.coingecko.com/api/v3/search/trending";
+
+export const coinGraphDataApi = (coinId:string, currency:string, from:number, to:number) =>
+  `https://api.coingecko.com/api/v3/coins/${coinId}/market_chart/range?vs_currency=${currency}&from=${from}&to=${to}`;
