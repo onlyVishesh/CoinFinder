@@ -22,7 +22,7 @@ type Coin = {
   thumb: string;
   market_data: {
     market_cap: { [currency: string]: number };
-    current_price: { [currency: string]: string };
+    current_price: { [currency: string]: number };
     fully_diluted_valuation: { [currency: string]: number };
     market_cap_change_percentage_24h_in_currency: {
       [currency: string]: number;

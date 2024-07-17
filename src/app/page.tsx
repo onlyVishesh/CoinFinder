@@ -15,6 +15,7 @@ import {
 import { useToast } from "@/components/ui/use-toast";
 import { coinListApi, coinsDataApi, searchApi } from "@/config/api";
 import { supportedCurrencies } from "@/config/constant";
+import { useCurrencyStore } from "@/context/currencyContext";
 import { cn } from "@/lib/utils";
 import {
   ArrowDownUp,
@@ -46,7 +47,7 @@ export default function Home() {
 
   const [coins, setCoins] = useState<Coin[]>([]);
   const [coinData, setCoinData] = useState<Coin[]>([]);
-  const [currency, setCurrency] = useState("usd");
+  const { currency, setCurrency } = useCurrencyStore();
   const [inputCurrency, setInputCurrency] = useState("");
   const [perPage, setPerPage] = useState(10);
   const [inputPerPage, setInputPerPage] = useState<number | string>();

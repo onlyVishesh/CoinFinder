@@ -10,6 +10,7 @@ import {
   nFormatter,
   supportedCurrencies,
 } from "@/config/constant";
+import { useCurrencyStore } from "@/context/currencyContext";
 import { cn } from "@/lib/utils";
 import {
   DropdownMenu,
@@ -62,8 +63,7 @@ type OverviewProps = {
 
 const Overview = ({ data }: OverviewProps) => {
   const { toast } = useToast();
-  const [priceRange, setPriceRange] = useState(1);
-  const [currency, setCurrency] = useState("usd");
+  const { currency, setCurrency } = useCurrencyStore();
   const [inputCurrency, setInputCurrency] = useState("");
   const { marketData, categories, symbol } = data;
 
@@ -309,13 +309,21 @@ const Overview = ({ data }: OverviewProps) => {
         </div>
 
         <div className="mx-auto flex w-full flex-col gap-2 lg:w-[70%]">
-          <Slider defaultValue={[100-Math.round(
+          <Slider
+            defaultValue={[
+              100 -
+                Math.round(
                   ((marketData.high_24h[currency] -
                     marketData.current_price[currency]) /
                     (marketData.high_24h[currency] -
-                    marketData.low_24h[currency])) *
+                      marketData.low_24h[currency])) *
                     10000,
-                ) / 100]} max={100} step={1} />
+                ) /
+                  100,
+            ]}
+            max={100}
+            step={1}
+          />
           <div className="flex justify-between">
             <div>
               <div>Low</div>
@@ -342,7 +350,7 @@ const Overview = ({ data }: OverviewProps) => {
                   ((marketData.high_24h[currency] -
                     marketData.current_price[currency]) /
                     (marketData.high_24h[currency] -
-                    marketData.low_24h[currency])) *
+                      marketData.low_24h[currency])) *
                     10000,
                 ) / 100}
                 %
