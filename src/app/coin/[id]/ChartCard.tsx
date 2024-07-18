@@ -21,6 +21,7 @@ import { cn } from "@/lib/utils";
 import axios, { AxiosError } from "axios";
 import { useEffect, useState } from "react";
 import { CartesianGrid, Line, LineChart, XAxis, YAxis } from "recharts";
+import ChartCardShimmer from "./ChartCardShimmer";
 
 type MarketData = {
   current_price: { [currency: string]: number };
@@ -59,7 +60,9 @@ export default function ChartCard({ data }: OverviewProps) {
   );
 
   const [tempChartData, setTempChartData] = useState([]);
-  const [chartData, setChartData] = useState<{ date: string; price: number; }[]>([]);
+  const [chartData, setChartData] = useState<
+    { date: string; price: number }[] | null
+  >(null);
 
   useEffect(() => {
     setDynamicProperty(`price_change_percentage_${timeRange}_in_currency`);
@@ -111,7 +114,7 @@ export default function ChartCard({ data }: OverviewProps) {
 
   useEffect(() => {
     getCoinChartData(id, currency, from, to);
-  }, [currency,from]);
+  }, [currency, from]);
   useEffect(() => {
     if (tempChartData.length > 0) {
       const formattedChartData = tempChartData.map(([timestamp, price]) => {
@@ -128,12 +131,10 @@ export default function ChartCard({ data }: OverviewProps) {
         };
       });
       setChartData(formattedChartData);
-      console.log(formattedChartData);
     }
-
   }, [tempChartData]);
 
-  if (chartData.length === 0) return;
+  if (chartData === null) return <ChartCardShimmer />;
 
   return (
     <Card className="flex-1 self-auto lg:self-stretch">
@@ -192,7 +193,7 @@ export default function ChartCard({ data }: OverviewProps) {
           </span>
         </CardDescription>
       </CardHeader>
-      <CardContent className="px-2 sm:p-6">
+      <CardContent className="px-2 sm:px-6">
         <ChartContainer
           config={chartConfig}
           className="aspect-auto h-[50vw] w-full lg:h-[500px]"

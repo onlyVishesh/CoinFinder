@@ -25,7 +25,7 @@ const AboutCoin = ({ data }: AboutCoinProps) => {
           }
           target="_blank"
           rel="noopener noreferrer"
-          className="text-blue-500 hover:underline bg-zinc-800 px-2 py-1 rounded-lg hover:bg-zinc-700"
+          className="rounded-lg bg-zinc-800 px-2 py-1 text-blue-500 hover:bg-zinc-700 hover:underline"
         >
           Website
         </a>,
@@ -35,10 +35,14 @@ const AboutCoin = ({ data }: AboutCoinProps) => {
       linkElements.push(
         <a
           key="reddit"
-          href={Array.isArray(links.whitepaper) ? links.whitepaper[0] : links.whitepaper}
+          href={
+            Array.isArray(links.whitepaper)
+              ? links.whitepaper[0]
+              : links.whitepaper
+          }
           target="_blank"
           rel="noopener noreferrer"
-          className="text-blue-500 hover:underline bg-zinc-800 px-2 py-1 rounded-lg hover:bg-zinc-700"
+          className="rounded-lg bg-zinc-800 px-2 py-1 text-blue-500 hover:bg-zinc-700 hover:underline"
         >
           Whitepaper
         </a>,
@@ -48,24 +52,28 @@ const AboutCoin = ({ data }: AboutCoinProps) => {
       linkElements.push(
         <a
           key="reddit"
-          href={Array.isArray(links.official_forum_url) ? links.official_forum_url[0] : links.official_forum_url || ''}
+          href={
+            Array.isArray(links.official_forum_url)
+              ? links.official_forum_url[0]
+              : links.official_forum_url || ""
+          }
           target="_blank"
           rel="noopener noreferrer"
-          className="text-blue-500 hover:underline bg-zinc-800 px-2 py-1 rounded-lg hover:bg-zinc-700"
+          className="rounded-lg bg-zinc-800 px-2 py-1 text-blue-500 hover:bg-zinc-700 hover:underline"
         >
           Official Form
         </a>,
       );
     }
-    if (links.repos_url?.github) {
-      links.repos_url.github.forEach((repoUrl, index) => {
+    if (Array.isArray(links.repos_url?.github)) {
+      links.repos_url.github.forEach((repoUrl: string, index: number) => {
         linkElements.push(
           <a
             key={`github-${index}`}
             href={repoUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-blue-500 hover:underline bg-zinc-800 px-2 py-1 rounded-lg hover:bg-zinc-700"
+            className="rounded-lg bg-zinc-800 px-2 py-1 text-blue-500 hover:bg-zinc-700 hover:underline"
           >
             {index === 0 ? "GitHub Repository" : `GitHub Repo ${index + 1}`}
           </a>,
@@ -76,10 +84,14 @@ const AboutCoin = ({ data }: AboutCoinProps) => {
       linkElements.push(
         <a
           key="reddit"
-          href={Array.isArray(links.subreddit_url) ? links.subreddit_url[0] : links.subreddit_url || ''}
+          href={
+            Array.isArray(links.subreddit_url)
+              ? links.subreddit_url[0]
+              : links.subreddit_url || ""
+          }
           target="_blank"
           rel="noopener noreferrer"
-          className="text-blue-500 hover:underline bg-zinc-800 px-2 py-1 rounded-lg hover:bg-zinc-700"
+          className="rounded-lg bg-zinc-800 px-2 py-1 text-blue-500 hover:bg-zinc-700 hover:underline"
         >
           Reddit
         </a>,
@@ -109,9 +121,9 @@ const AboutCoin = ({ data }: AboutCoinProps) => {
         dangerouslySetInnerHTML={{ __html: description.en }}
         className="text-md lg:text-lg"
       />
-      <div className="flex gap-2 items-start">
-        <h2 className="text-lg font-bold lg:text-xl text-nowrap">Links : </h2>
-        <div className="flex gap-2 flex-wrap">{renderLinks()}</div>
+      <div className="flex items-start gap-2">
+        <h2 className="text-nowrap text-lg font-bold lg:text-xl">Links : </h2>
+        <div className="flex flex-wrap gap-2">{renderLinks()}</div>
       </div>
     </div>
   );

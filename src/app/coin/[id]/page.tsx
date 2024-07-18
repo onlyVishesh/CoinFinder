@@ -8,7 +8,10 @@ import { ArrowLeft, Star } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import AboutCoin from "./AboutCoin";
+import AboutCoinShimmer from "./AboutCoinShimmer";
 import Overview from "./Overview";
+import ChartCardShimmer from "./ChartCardShimmer";
+import OverviewShimmer from "./OverViewShimmer";
 
 type Coin = {
   id: string;
@@ -94,7 +97,31 @@ const Page = ({ params }: { params: { id: string } }) => {
     getCoinData(params.id);
   }, []);
 
-  if (coinData === null) return <></>;
+  if (coinData === null)
+    return (
+      <div className="mx-auto my-6 h-screen w-[95%] flex-wrap justify-center gap-5 rounded-md sm:gap-10 md:w-[90%] xl:w-[80%]">
+        <div className="flex items-center justify-between">
+          <Link href="/">
+            <ArrowLeft
+              strokeWidth={3}
+              className="size-8 rounded-full border-2 border-zinc-400 p-1 text-zinc-300 duration-150 hover:bg-zinc-700 hover:text-zinc-100 sm:size-10"
+            />
+          </Link>
+          <h1 className="h-10 w-60 animate-pulse rounded-lg bg-zinc-800 sm:w-80"></h1>
+          <div className="size-6 animate-pulse bg-zinc-800 sm:size-8 rounded-full" />
+        </div>
+
+        <div className="mb-4 mt-4 flex flex-col items-stretch gap-7 md:mt-8 lg:mt-16 lg:flex-row">
+          <ChartCardShimmer />
+          <OverviewShimmer />
+          {/* <ChartCard          /> */}
+          {/* <Overview          /> */}
+        </div>
+        <div className="flex-1">
+          <AboutCoinShimmer />
+        </div>
+      </div>
+    );
 
   return (
     <div className="mx-auto my-6 h-screen w-[95%] flex-wrap justify-center gap-5 rounded-md sm:gap-10 md:w-[90%] xl:w-[80%]">
