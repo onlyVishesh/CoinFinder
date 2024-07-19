@@ -1,6 +1,5 @@
 "use client";
 
-
 const OverviewShimmer = () => {
   return (
     <div className="flex flex-1 flex-col gap-7 self-auto rounded-lg border-[0.5px] border-zinc-800 bg-[#1B1816] p-8 md:p-2 lg:self-stretch lg:p-8">

@@ -3,14 +3,15 @@
 import ChartCard from "@/app/coin/[id]/ChartCard";
 import { useToast } from "@/components/ui/use-toast";
 import { coinDataApi } from "@/config/api";
+import { useCoinStore } from "@/context/coinsContext";
 import axios, { AxiosError } from "axios";
 import { ArrowLeft, Star } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import AboutCoin from "./AboutCoin";
 import AboutCoinShimmer from "./AboutCoinShimmer";
-import Overview from "./Overview";
 import ChartCardShimmer from "./ChartCardShimmer";
+import Overview from "./Overview";
 import OverviewShimmer from "./OverViewShimmer";
 
 type Coin = {
@@ -57,12 +58,21 @@ type Coin = {
 const Page = ({ params }: { params: { id: string } }) => {
   const { toast } = useToast();
   const [coinData, setCoinData] = useState<Coin | null>(null);
+  const { coinIds, addCoin, removeCoin } = useCoinStore();
+
+  const onToggleWatchList = (coinId: string) => {
+    const isCoinInWatchlist = coinIds.includes(coinId);
+    if (isCoinInWatchlist) {
+      removeCoin(coinId);
+    } else {
+      addCoin(coinId);
+    }
+  };
 
   const getCoinData = async (coinId: string) => {
     try {
       const response = await axios.get(coinDataApi(coinId));
       setCoinData(response.data);
-      console.log(coinData);
     } catch (error) {
       let errorMessage = "An unknown error occurred";
 
@@ -95,7 +105,7 @@ const Page = ({ params }: { params: { id: string } }) => {
 
   useEffect(() => {
     getCoinData(params.id);
-  }, []);
+  }, [params.id]);
 
   if (coinData === null)
     return (
@@ -108,20 +118,20 @@ const Page = ({ params }: { params: { id: string } }) => {
             />
           </Link>
           <h1 className="h-10 w-60 animate-pulse rounded-lg bg-zinc-800 sm:w-80"></h1>
-          <div className="size-6 animate-pulse bg-zinc-800 sm:size-8 rounded-full" />
+          <div className="size-6 animate-pulse rounded-full bg-zinc-800 sm:size-8" />
         </div>
 
         <div className="mb-4 mt-4 flex flex-col items-stretch gap-7 md:mt-8 lg:mt-16 lg:flex-row">
           <ChartCardShimmer />
           <OverviewShimmer />
-          {/* <ChartCard          /> */}
-          {/* <Overview          /> */}
         </div>
         <div className="flex-1">
           <AboutCoinShimmer />
         </div>
       </div>
     );
+
+  const isCoinInWatchlist = coinIds.includes(coinData.id);
 
   return (
     <div className="mx-auto my-6 h-screen w-[95%] flex-wrap justify-center gap-5 rounded-md sm:gap-10 md:w-[90%] xl:w-[80%]">
@@ -135,7 +145,13 @@ const Page = ({ params }: { params: { id: string } }) => {
         <h1 className="text-3xl font-bold sm:text-4xl">
           {coinData.name} ({coinData.symbol.toUpperCase()})
         </h1>
-        <Star strokeWidth={2} className="size-6 sm:size-8" />
+        <Star
+          strokeWidth={2}
+          className={`size-6 sm:size-8 ${isCoinInWatchlist ? "fill-yellow-400 text-yellow-500" : ""}`}
+          onClick={() => {
+            onToggleWatchList(coinData.id);
+          }}
+        />
       </div>
 
       <div className="mb-4 mt-4 flex flex-col items-stretch gap-7 md:mt-8 lg:mt-16 lg:flex-row">

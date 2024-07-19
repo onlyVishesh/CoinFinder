@@ -84,7 +84,7 @@ const Overview = ({ data }: OverviewProps) => {
   };
 
   return (
-    <div className="flex flex-1 flex-col gap-7 self-auto lg:self-stretch rounded-lg border-[0.5px] border-zinc-800 bg-[#1B1816] p-8 md:p-2 lg:p-8">
+    <div className="flex flex-1 flex-col gap-7 self-auto rounded-lg border-[0.5px] border-zinc-800 bg-[#1B1816] p-8 md:p-2 lg:self-stretch lg:p-8">
       <div className="flex flex-col gap-3">
         <div className="flex flex-1 justify-between">
           <h2 className="text-2xl font-semibold">About</h2>

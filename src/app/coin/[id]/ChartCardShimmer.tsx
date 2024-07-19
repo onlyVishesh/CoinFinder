@@ -19,13 +19,13 @@ export default function ChartCardShimmer() {
         </CardDescription>
       </CardHeader>
       <div className="px-2 sm:px-6">
-        <div className="aspect-auto h-[50vw] w-full bg-zinc-800 lg:h-[500px] animate-pulse rounded-lg"></div>
-        <div className="flex items-center justify-center gap-10 my-4">
-          <div className="flex size-9 select-none items-center justify-center rounded-full bg-zinc-800 animate-pulse"></div>
-          <div className="flex size-9 select-none items-center justify-center rounded-full bg-zinc-800 animate-pulse"></div>
-          <div className="flex size-9 select-none items-center justify-center rounded-full bg-zinc-800 animate-pulse"></div>
-          <div className="flex size-9 select-none items-center justify-center rounded-full bg-zinc-800 animate-pulse"></div>
-          <div className="flex size-9 select-none items-center justify-center rounded-full bg-zinc-800 animate-pulse"></div>
+        <div className="aspect-auto h-[50vw] w-full animate-pulse rounded-lg bg-zinc-800 lg:h-[500px]"></div>
+        <div className="my-4 flex items-center justify-center gap-10">
+          <div className="flex size-9 animate-pulse select-none items-center justify-center rounded-full bg-zinc-800"></div>
+          <div className="flex size-9 animate-pulse select-none items-center justify-center rounded-full bg-zinc-800"></div>
+          <div className="flex size-9 animate-pulse select-none items-center justify-center rounded-full bg-zinc-800"></div>
+          <div className="flex size-9 animate-pulse select-none items-center justify-center rounded-full bg-zinc-800"></div>
+          <div className="flex size-9 animate-pulse select-none items-center justify-center rounded-full bg-zinc-800"></div>
         </div>
       </div>
     </Card>
