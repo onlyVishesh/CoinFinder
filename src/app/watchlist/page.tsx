@@ -41,8 +41,6 @@ type Coin = {
 
 export default function Home() {
   const router = useRouter();
-  const inputRef = useRef<HTMLInputElement>(null);
-  const searchResultsRef = useRef<HTMLDivElement>(null);
   const { toast } = useToast();
   const { coinIds } = useCoinStore();
 
@@ -94,6 +92,10 @@ export default function Home() {
 
   const isValidCurrency = (currency: string) => {
     return supportedCurrencies.includes(currency.toLowerCase());
+  };
+
+  const handleCoinClick = (coinId: string) => {
+    router.push(`/coin/${coinId}`);
   };
 
   const handleCurrencyInput = () => {

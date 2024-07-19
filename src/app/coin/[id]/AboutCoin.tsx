@@ -5,10 +5,17 @@ import { useEffect, useRef } from "react";
 type AboutCoinProps = {
   data: {
     description: { [key: string]: string };
-    links: { [key: string]: [string] | string };
+    links: {
+      homepage?: string | [string];
+      whitepaper?: string | [string];
+      official_forum_url?: string | [string];
+      repos_url?: {
+        github?: string | [string];
+      };
+      subreddit_url?: string | [string];
+    };
   };
 };
-
 const AboutCoin = ({ data }: AboutCoinProps) => {
   const contentRef = useRef<HTMLDivElement>(null);
   const { description, links } = data;
