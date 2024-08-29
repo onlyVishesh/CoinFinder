@@ -24,7 +24,7 @@ https://github.com/user-attachments/assets/c18db7d2-4261-4f14-9f51-0fd7f7d041c1
 
 ## Live Website
 
-Explore CoinFinder live: [CoinFinder]([https://your-deployment-url.com](https://coin-finder-alpha.vercel.app/))
+Explore CoinFinder live: [CoinFinder](https://coin-finder-alpha.vercel.app/)
 
 ## Description
 
